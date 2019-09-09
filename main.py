@@ -71,24 +71,28 @@ def main(screen):
         key = screen.getch()
 
         if key == curses.KEY_UP:
-            screen.addstr(dot_pos[1], dot_pos[0], ' ')
-            dot_pos = (dot_pos[0], dot_pos[1] - 1)
-            screen.addstr(dot_pos[1], dot_pos[0], '.')
+            if not maze[dot_pos[1] - 1][dot_pos[0]] == '#':
+                screen.addstr(dot_pos[1], dot_pos[0], ' ')
+                dot_pos = (dot_pos[0], dot_pos[1] - 1)
+                screen.addstr(dot_pos[1], dot_pos[0], '.')
 
         elif key == curses.KEY_DOWN:
-            screen.addstr(dot_pos[1], dot_pos[0], ' ')
-            dot_pos = (dot_pos[0], dot_pos[1] + 1)
-            screen.addstr(dot_pos[1], dot_pos[0], '.')
+            if not maze[dot_pos[1] + 1][dot_pos[0]] == '#':
+                screen.addstr(dot_pos[1], dot_pos[0], ' ')
+                dot_pos = (dot_pos[0], dot_pos[1] + 1)
+                screen.addstr(dot_pos[1], dot_pos[0], '.')
 
         elif key == curses.KEY_LEFT:
-            screen.addstr(dot_pos[1], dot_pos[0], ' ')
-            dot_pos = (dot_pos[0] - 1, dot_pos[1])
-            screen.addstr(dot_pos[1], dot_pos[0], '.')
+            if not maze[dot_pos[1]][dot_pos[0] - 1] == '#':
+                screen.addstr(dot_pos[1], dot_pos[0], ' ')
+                dot_pos = (dot_pos[0] - 1, dot_pos[1])
+                screen.addstr(dot_pos[1], dot_pos[0], '.')
 
         elif key == curses.KEY_RIGHT:
-            screen.addstr(dot_pos[1], dot_pos[0], ' ')
-            dot_pos = (dot_pos[0] + 1, dot_pos[1])
-            screen.addstr(dot_pos[1], dot_pos[0], '.')
+            if not maze[dot_pos[1]][dot_pos[0] + 1] == '#':
+                screen.addstr(dot_pos[1], dot_pos[0], ' ')
+                dot_pos = (dot_pos[0] + 1, dot_pos[1])
+                screen.addstr(dot_pos[1], dot_pos[0], '.')
 
         elif key == curses.KEY_ENTER or key in [10, 13]:
             # if user selected last row, exit the program
