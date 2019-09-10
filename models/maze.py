@@ -14,7 +14,9 @@ class Maze:
         self.board = [['' for _ in range(self.width)] for _ in range(self.height)]
         self.__mg_xy_position = (0, 1)
         self.__a_xy_position = (0, 0)
+        self.__a_collected = False
         self.__b_xy_position = (0, 0)
+        self.__b_collected = False
 
     def generate_board(self):
         w: int = int((self.width - 1) / 2)
@@ -68,7 +70,7 @@ class Maze:
         for y in range(len(self.board)):
             for x in range(len(self.board[y])):
                 if self.board[y][x] == ' ':
-                    free_blocks_xy_positions.append((y, x))
+                    free_blocks_xy_positions.append((x, y))
 
         # Shuffle the array to mix the positions
         shuffle(free_blocks_xy_positions)
@@ -98,11 +100,23 @@ class Maze:
             if not self.board[self.__mg_xy_position[1]][self.__mg_xy_position[0] - 1] == '#':
                 self.__mg_xy_position = (self.__mg_xy_position[0] - 1, self.__mg_xy_position[1])
 
+        if self.__mg_xy_position == self.__a_xy_position:
+            self.__a_collected = True
+
+        if self.__mg_xy_position == self.__b_xy_position:
+            self.__b_collected = True
+
     def get_mg_xy_position(self) -> (int, int):
         return self.__mg_xy_position
 
     def get_a_xy_position(self) -> (int, int):
         return self.__a_xy_position
 
+    def get_a_collected(self) -> bool:
+        return self.__a_collected
+
     def get_b_xy_position(self) -> (int, int):
         return self.__b_xy_position
+
+    def get_b_collected(self) -> bool:
+        return self.__b_collected
