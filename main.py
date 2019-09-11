@@ -8,7 +8,7 @@ def main(screen):
 
     maze_obj.place_items()
 
-    # turn off cursor blinking
+    # Turn off cursor blinking
     curses.curs_set(0)
 
     render_maze(screen, maze_obj)
@@ -33,7 +33,7 @@ def main(screen):
             render_maze(screen, maze_obj)
 
         elif key == curses.KEY_ENTER or key in [10, 13]:
-            # if user press enter, exit the program
+            # If user press enter, exit the program
             exit()
 
 
