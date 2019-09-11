@@ -21,6 +21,11 @@ class Maze:
         self.__game_over = False
 
     def generate_board(self):
+        """
+        Generate a maze board
+        Set the board property of the class
+        """
+
         w: int = int((self.width - 1) / 2)
         h: int = int((self.height - 1) / 2)
 
@@ -67,6 +72,11 @@ class Maze:
         self.board[self.height - 2][self.width - 1] = 'G'
 
     def place_items(self):
+        """
+        Generate the coordinated of items to collect in order to win the game
+        Set the __a_xy_position and __b_xy_position properties of the class
+        """
+
         # Step 0 : init
         free_blocks_xy_positions: List[(int, int)] = []
 
@@ -88,6 +98,12 @@ class Maze:
         self.__b_xy_position = free_blocks_xy_positions[element_b_index]
 
     def move_mg(self, direction: int):
+        """
+        Handle the movement of MacGyver on the board
+        Reset the __mg_xy_position property of the class with new position coordinated
+        :param direction:
+            Must be DIRECTION_UP or DIRECTION_RIGHT or DIRECTION_DOWN or DIRECTION_LEFT
+        """
         if direction == self.DIRECTION_UP:
             if self.board[self.__mg_xy_position[1] - 1][self.__mg_xy_position[0]] == ' ':
                 self.__mg_xy_position = (self.__mg_xy_position[0], self.__mg_xy_position[1] - 1)
@@ -119,22 +135,59 @@ class Maze:
             self.__b_collected = True
 
     def get_mg_xy_position(self) -> (int, int):
+        """
+        Getter for MacGyver position property
+        :return:
+            A tuple (int, int) with X and Y position
+        """
         return self.__mg_xy_position
 
     def get_a_xy_position(self) -> (int, int):
+        """
+        Getter for item A to collect position property
+        :return:
+            A tuple (int, int) with X and Y position
+        """
         return self.__a_xy_position
 
     def get_a_collected(self) -> bool:
+        """
+        Getter for item A collected or not property
+        :return:
+            A boolean, True if item A is collected, False otherwise
+        """
         return self.__a_collected
 
     def get_b_xy_position(self) -> (int, int):
+        """
+        Getter for item B to collect position property
+        :return:
+            A tuple (int, int) with X and Y position
+        """
         return self.__b_xy_position
 
     def get_b_collected(self) -> bool:
+        """
+        Getter for item B collected or not property
+        :return:
+            A boolean, True if item B is collected, False otherwise
+        """
         return self.__b_collected
 
     def get_game_won(self) -> bool:
+        """
+        Getter for game won property
+        Reminder: a game is won if item A and item B are collected and user reached the end of the maze
+        :return:
+            A boolean, True if game has been won, False otherwise
+        """
         return self.__game_won
 
     def get_game_over(self) -> bool:
+        """
+        Getter for game over property
+        Reminder: a game is over if item A or item B are not collected but user reached the end of the maze
+        :return:
+            A boolean, True if game is over, False otherwise
+        """
         return self.__game_over
