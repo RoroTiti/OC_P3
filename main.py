@@ -38,21 +38,30 @@ def main(screen):
 
 
 def render_maze(screen, maze: Maze):
-    for x in range(len(maze.board)):
-        for y in range(len(maze.board[x])):
-            screen.addstr(y, x, maze.board[y][x])
+    if not (maze.get_game_over() or maze.get_game_won()):
+        for x in range(len(maze.board)):
+            for y in range(len(maze.board[x])):
+                screen.addstr(y, x, maze.board[y][x])
 
-    screen.addstr(maze.get_mg_xy_position()[1], maze.get_mg_xy_position()[0], '.')
+        screen.addstr(maze.get_mg_xy_position()[1], maze.get_mg_xy_position()[0], '.')
 
-    if not maze.get_a_collected():
-        screen.addstr(maze.get_a_xy_position()[1], maze.get_a_xy_position()[0], 'A')
-    else:
-        screen.addstr(20, 0, 'A item collected')
+        if not maze.get_a_collected():
+            screen.addstr(maze.get_a_xy_position()[1], maze.get_a_xy_position()[0], 'A')
+        else:
+            screen.addstr(20, 0, 'A item collected')
 
-    if not maze.get_b_collected():
-        screen.addstr(maze.get_b_xy_position()[1], maze.get_b_xy_position()[0], 'B')
-    else:
-        screen.addstr(21, 0, 'B item collected')
+        if not maze.get_b_collected():
+            screen.addstr(maze.get_b_xy_position()[1], maze.get_b_xy_position()[0], 'B')
+        else:
+            screen.addstr(21, 0, 'B item collected')
+
+    elif maze.get_game_over():
+        screen.clear()
+        screen.addstr(1, 1, 'Game over')
+
+    elif maze.get_game_won():
+        screen.clear()
+        screen.addstr(1, 1, 'You win! Congrats!')
 
 
 if __name__ == '__main__':

@@ -17,6 +17,8 @@ class Maze:
         self.__a_collected = False
         self.__b_xy_position = (0, 0)
         self.__b_collected = False
+        self.__game_won = False
+        self.__game_over = False
 
     def generate_board(self):
         w: int = int((self.width - 1) / 2)
@@ -58,9 +60,11 @@ class Maze:
                 self.board[curr_y - 1] = list(''.join(b))
                 curr_y += 1
 
-        # making the maze input and output
+        # Making the maze entry and exit
         self.board[1][0] = ' '
-        self.board[self.height - 2][self.width - 1] = ' '
+
+        # Placing the guardian
+        self.board[self.height - 2][self.width - 1] = 'G'
 
     def place_items(self):
         # Step 0 : init
@@ -85,19 +89,27 @@ class Maze:
 
     def move_mg(self, direction: int):
         if direction == self.DIRECTION_UP:
-            if not self.board[self.__mg_xy_position[1] - 1][self.__mg_xy_position[0]] == '#':
+            if self.board[self.__mg_xy_position[1] - 1][self.__mg_xy_position[0]] == ' ':
                 self.__mg_xy_position = (self.__mg_xy_position[0], self.__mg_xy_position[1] - 1)
 
         elif direction == self.DIRECTION_RIGHT:
-            if not self.board[self.__mg_xy_position[1]][self.__mg_xy_position[0] + 1] == '#':
-                self.__mg_xy_position = (self.__mg_xy_position[0] + 1, self.__mg_xy_position[1])
+            # This line prevents out of range exception at maze exit
+            if self.__mg_xy_position[0] < len(self.board[0]) - 1:
+                if self.board[self.__mg_xy_position[1]][self.__mg_xy_position[0] + 1] == 'G':
+                    if self.get_a_collected() and self.get_b_collected():
+                        self.__game_won = True
+                    else:
+                        self.__game_over = True
+
+                elif self.board[self.__mg_xy_position[1]][self.__mg_xy_position[0] + 1] == ' ':
+                    self.__mg_xy_position = (self.__mg_xy_position[0] + 1, self.__mg_xy_position[1])
 
         elif direction == self.DIRECTION_DOWN:
-            if not self.board[self.__mg_xy_position[1] + 1][self.__mg_xy_position[0]] == '#':
+            if self.board[self.__mg_xy_position[1] + 1][self.__mg_xy_position[0]] == ' ':
                 self.__mg_xy_position = (self.__mg_xy_position[0], self.__mg_xy_position[1] + 1)
 
         elif direction == self.DIRECTION_LEFT:
-            if not self.board[self.__mg_xy_position[1]][self.__mg_xy_position[0] - 1] == '#':
+            if self.board[self.__mg_xy_position[1]][self.__mg_xy_position[0] - 1] == ' ':
                 self.__mg_xy_position = (self.__mg_xy_position[0] - 1, self.__mg_xy_position[1])
 
         if self.__mg_xy_position == self.__a_xy_position:
@@ -120,3 +132,9 @@ class Maze:
 
     def get_b_collected(self) -> bool:
         return self.__b_collected
+
+    def get_game_won(self) -> bool:
+        return self.__game_won
+
+    def get_game_over(self) -> bool:
+        return self.__game_over
