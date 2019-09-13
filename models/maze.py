@@ -17,6 +17,8 @@ class Maze:
         self.__a_collected = False
         self.__b_xy_position = (0, 0)
         self.__b_collected = False
+        self.__c_xy_position = (0, 0)
+        self.__c_collected = False
         self.__game_won = False
         self.__game_over = False
 
@@ -86,16 +88,26 @@ class Maze:
                 if self.board[y][x] == ' ':
                     free_blocks_xy_positions.append((x, y))
 
+        free_blocks_xy_positions.pop(0)
+        free_blocks_xy_positions.pop(len(free_blocks_xy_positions) - 1)
+
         # Shuffle the array to mix the positions
         shuffle(free_blocks_xy_positions)
 
+        # Random zones
+        lol = (len(free_blocks_xy_positions) - 1) // 3
+
         # Step 2 : choosing place of element A
-        element_a_index = randint(0, len(free_blocks_xy_positions) // 2)
+        element_a_index = randint(0, lol)
         self.__a_xy_position = free_blocks_xy_positions[element_a_index]
 
         # Step 3 : choosing place of element B
-        element_b_index = randint(len(free_blocks_xy_positions) // 2, len(free_blocks_xy_positions) - 1)
+        element_b_index = randint(lol, 2 * lol)
         self.__b_xy_position = free_blocks_xy_positions[element_b_index]
+
+        # Step 4 : choosing place of element C
+        element_c_index = randint(2 * lol, 3 * lol)
+        self.__c_xy_position = free_blocks_xy_positions[element_c_index]
 
     def move_mg(self, direction: int):
         """
@@ -131,8 +143,11 @@ class Maze:
         if self.__mg_xy_position == self.__a_xy_position:
             self.__a_collected = True
 
-        if self.__mg_xy_position == self.__b_xy_position:
+        elif self.__mg_xy_position == self.__b_xy_position:
             self.__b_collected = True
+
+        elif self.__mg_xy_position == self.__c_xy_position:
+            self.__c_collected = True
 
     def get_mg_xy_position(self) -> (int, int):
         """
@@ -173,6 +188,22 @@ class Maze:
             A boolean, True if item B is collected, False otherwise
         """
         return self.__b_collected
+
+    def get_c_xy_position(self) -> (int, int):
+        """
+        Getter for item C to collect position property
+        :return:
+            A tuple (int, int) with X and Y position
+        """
+        return self.__c_xy_position
+
+    def get_c_collected(self) -> bool:
+        """
+        Getter for item C collected or not property
+        :return:
+            A boolean, True if item B is collected, False otherwise
+        """
+        return self.__c_collected
 
     def get_game_won(self) -> bool:
         """
