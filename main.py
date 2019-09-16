@@ -109,13 +109,13 @@ def render_maze(view_model: ViewModel):
 
         collect_slots_xy = []
 
-        for index in range(3):
+        for index in range(constants.OBJECTS):
             collect_slots_xy.append((constants.SQUARE_WIDTH * constants.MAZE_WIDTH, index * constants.SQUARE_HEIGHT))
 
         for xy in collect_slots_xy:
             window.blit(highlight_asset, xy)
 
-        for index in range(len(objects)):
+        for index in range(constants.OBJECTS):
             obj = objects[index]
             asset = objects_asset_offset[index]
 
