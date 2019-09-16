@@ -24,8 +24,6 @@ def main():
     while loop:
         pygame.time.delay(10)
 
-        window.fill((0, 0, 0))
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 loop = False
@@ -112,8 +110,8 @@ def render_maze(view_model: ViewModel):
         for index in range(constants.OBJECTS):
             collect_slots_xy.append((constants.SQUARE_WIDTH * constants.MAZE_WIDTH, index * constants.SQUARE_HEIGHT))
 
-        for xy in collect_slots_xy:
-            window.blit(highlight_asset, xy)
+        for collect_slot_xy in collect_slots_xy:
+            window.blit(highlight_asset, collect_slot_xy)
 
         for index in range(constants.OBJECTS):
             obj = objects[index]
