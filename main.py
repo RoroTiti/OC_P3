@@ -1,29 +1,19 @@
+import sys
+
 import pygame
 
 import constants
+from models.maze import Maze
 from viewmodels.maze import ViewModel
 
-screen = (1024, 960)
-loop = True
 window = None
-
-# Assets declarations
-macgyver_asset = pygame.image.load(r'assets/player_stand__.png')
-guardian_asset = pygame.image.load(r'assets/soldier_stand__.png')
-wall_asset = pygame.image.load(r'assets/wall.png')
-ground_asset = pygame.image.load(r'assets/ground.png')
-
-objects_asset_offset = [
-    (pygame.image.load(r'assets/tube__.png'), 0),
-    (pygame.image.load(r'assets/needle__.png'), 6),
-    (pygame.image.load(r'assets/ether__.png'), 6)
-]
-
-highlight_asset = pygame.image.load(r'assets/highlight.png')
 
 
 def main():
-    global loop, window
+    global window
+
+    screen = (1024, 960)
+    loop = True
 
     pygame.init()
     window = pygame.display.set_mode(screen)
@@ -59,7 +49,41 @@ def main():
         pygame.display.update()
 
 
+def generate_maze():
+    maze = Maze(constants.MAZE_WIDTH, constants.MAZE_HEIGHT)
+    maze.generate_board()
+    board = maze.get_board()
+
+    file_content: str = ''
+
+    for x in range(constants.MAZE_WIDTH):
+        for y in range(constants.MAZE_HEIGHT):
+            file_content += board[x][y]
+
+        file_content += '\n'
+
+    print(file_content)
+
+    file = open("maze.txt", "w+")
+    file.write(file_content)
+    file.close()
+
+
 def render_maze(view_model: ViewModel):
+    # PyGame assets declarations
+    macgyver_asset = pygame.image.load(r'assets/player_stand__.png')
+    guardian_asset = pygame.image.load(r'assets/soldier_stand__.png')
+    wall_asset = pygame.image.load(r'assets/wall.png')
+    ground_asset = pygame.image.load(r'assets/ground.png')
+
+    objects_asset_offset = [
+        (pygame.image.load(r'assets/tube__.png'), 0),
+        (pygame.image.load(r'assets/needle__.png'), 6),
+        (pygame.image.load(r'assets/ether__.png'), 6)
+    ]
+
+    highlight_asset = pygame.image.load(r'assets/highlight.png')
+
     board = view_model.get_maze().get_board()
     macgyver = view_model.get_macgyver()
     objects = view_model.get_objects()
@@ -119,4 +143,10 @@ def render_maze(view_model: ViewModel):
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 2 and sys.argv[1] == 'gen':
+        print('Generating Maze file...')
+        generate_maze()
+        print('Generation done!')
+        exit()
+    else:
+        main()

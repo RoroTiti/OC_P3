@@ -57,8 +57,17 @@ class Maze:
         self.__board[1][0] = ' '
 
         # Placing the guardian
-        # TODO: Replace that
         self.__board[self.height - 2][self.width - 1] = 'G'
+
+    def load_string(self, file_content: str):
+        content = file_content.split('\n')
+        content = content[:-1]
+
+        current_y = 1
+
+        for line in content:
+            self.__board[current_y - 1] = list(line)
+            current_y += 1
 
     def get_board(self) -> [[str]]:
         return self.__board
