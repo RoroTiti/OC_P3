@@ -7,7 +7,7 @@ from models.maze import Maze
 from viewmodel import ViewModel
 
 window = None
-can_leave = False
+can_exit = False
 
 
 def main():
@@ -35,7 +35,7 @@ def main():
 
             keys = pygame.key.get_pressed()
 
-            if can_leave:
+            if can_exit:
                 if keys[pygame.K_RETURN] or keys[pygame.K_KP_ENTER]:
                     quit()
             else:
@@ -87,7 +87,7 @@ def render_maze(view_model: ViewModel):
     :param view_model: a ViewModel instance to work with
     :return:
     """
-    global can_leave
+    global can_exit
 
     # PyGame assets declarations
     macgyver_asset_offset = (pygame.image.load(r'assets/player_stand__.png'), 8)
@@ -184,7 +184,7 @@ def render_maze(view_model: ViewModel):
 
         window.blit(text, text_rect)
         window.blit(sub_text, sub_text_rect)
-        can_leave = True
+        can_exit = True
 
 
 if __name__ == '__main__':
