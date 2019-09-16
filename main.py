@@ -17,7 +17,7 @@ def main():
 
     pygame.init()
     window = pygame.display.set_mode(screen)
-    pygame.display.set_caption("MySuperMaze")
+    pygame.display.set_caption("My Super Maze by @RoroTiti")
 
     view_model = ViewModel()
 
@@ -62,7 +62,7 @@ def generate_maze():
 
     print(file_content)
 
-    file = open("maze.txt", "w+")
+    file = open("maze.mz", "w+")
     file.write(file_content)
     file.close()
 
@@ -142,7 +142,7 @@ def render_maze(view_model: ViewModel):
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == 'gen':
-        print('Generating maze.txt file...')
+        print('Generating maze.mz file...')
         generate_maze()
         print('Generation done!')
         exit()

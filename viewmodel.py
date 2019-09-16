@@ -19,7 +19,7 @@ class ViewModel:
         self.__game_won = False
         self.__game_over = False
 
-        file = open("maze.txt", "r")
+        file = open("maze.mz", "r")
         lines = file.readlines()
         self.__maze.load_string(lines)
         file.close()
