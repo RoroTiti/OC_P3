@@ -1,128 +1,121 @@
 import pygame
 
-from models.maze import Maze
+import constants
+from viewmodels.maze import ViewModel
 
 screen = (1024, 960)
-run = True
-sqr_width = 64
-sqr_height = 64
-window, font = None, None
+loop = True
+window = None
 
-mg = pygame.image.load(r'images/player_stand__.png')
-guardian = pygame.image.load(r'images/soldier_stand__.png')
-brick = pygame.image.load(r'images/wall.png')
-ground = pygame.image.load(r'images/ground.png')
-item_a = pygame.image.load(r'images/tube__.png')
-item_a_top_offset = 0
-item_b = pygame.image.load(r'images/needle__.png')
-item_b_top_offset = 6
-item_c = pygame.image.load(r'images/ether__.png')
-item_c_top_offset = 6
-highlight = pygame.image.load(r'images/highlight.png')
+# Assets declarations
+macgyver_asset = pygame.image.load(r'assets/player_stand__.png')
+guardian_asset = pygame.image.load(r'assets/soldier_stand__.png')
+wall_asset = pygame.image.load(r'assets/wall.png')
+ground_asset = pygame.image.load(r'assets/ground.png')
+
+objects_asset_offset = [
+    (pygame.image.load(r'assets/tube__.png'), 0),
+    (pygame.image.load(r'assets/needle__.png'), 6),
+    (pygame.image.load(r'assets/ether__.png'), 6)
+]
+
+highlight_asset = pygame.image.load(r'assets/highlight.png')
 
 
 def main():
-    global run, window, font
+    global loop, window
 
     pygame.init()
-    font = pygame.font.SysFont("Arial", 15)
     window = pygame.display.set_mode(screen)
     pygame.display.set_caption("MySuperMaze")
 
-    maze = Maze(15, 15)
-    maze.generate_board()
-    maze.place_items()
+    view_model = ViewModel()
 
-    while run:
+    while loop:
         pygame.time.delay(10)
 
         window.fill((0, 0, 0))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                loop = False
 
             keys = pygame.key.get_pressed()
 
             if keys[pygame.K_UP]:
-                maze.move_mg(maze.DIRECTION_UP)
+                view_model.move_mg(view_model.DIRECTION_UP)
 
             if keys[pygame.K_DOWN]:
-                maze.move_mg(maze.DIRECTION_DOWN)
+                view_model.move_mg(view_model.DIRECTION_DOWN)
 
             elif keys[pygame.K_LEFT]:
-                maze.move_mg(maze.DIRECTION_LEFT)
+                view_model.move_mg(view_model.DIRECTION_LEFT)
 
             elif keys[pygame.K_RIGHT]:
-                maze.move_mg(maze.DIRECTION_RIGHT)
+                view_model.move_mg(view_model.DIRECTION_RIGHT)
 
         # Rendering the maze
-        render_maze(maze)
+        render_maze(view_model)
         pygame.display.update()
 
 
-def render_maze(maze: Maze):
-    if not (maze.get_game_over() or maze.get_game_won()):
+def render_maze(view_model: ViewModel):
+    board = view_model.get_maze().get_board()
+    macgyver = view_model.get_macgyver()
+    objects = view_model.get_objects()
+
+    # Painting the background
+    for x in range(constants.MAZE_WIDTH + 1):
+        for y in range(constants.MAZE_HEIGHT):
+            window.blit(ground_asset, (x * constants.SQUARE_WIDTH, y * constants.SQUARE_HEIGHT))
+
+    if not (view_model.get_game_over() or view_model.get_game_won()):
         # Painting the maze by itself
-        for x in range(len(maze.board)):
-            for y in range(len(maze.board[x])):
-                if maze.board[y][x] == '#':
-                    window.blit(ground, (x * sqr_width, y * sqr_height))
-                    window.blit(brick, (x * sqr_width, y * sqr_height))
-                else:
-                    window.blit(ground, (x * sqr_width, y * sqr_height))
+        for x in range(constants.MAZE_WIDTH):
+            for y in range(constants.MAZE_HEIGHT):
+                if board[y][x] == '#':
+                    window.blit(wall_asset, (x * constants.SQUARE_WIDTH, y * constants.SQUARE_HEIGHT))
 
-        window.blit(mg, (maze.get_mg_xy_position()[0] * sqr_width + 8, maze.get_mg_xy_position()[1] * sqr_height))
-
-        # Painting the right column
-        for i in range(15):
-            window.blit(ground, (15 * sqr_width, i * sqr_height))
-
-        collect_slot_1_xy = (sqr_height * 15, 0 * sqr_height)
-        collect_slot_2_xy = (sqr_height * 15, 1 * sqr_height)
-        collect_slot_3_xy = (sqr_height * 15, 2 * sqr_height)
-
-        window.blit(highlight, collect_slot_1_xy)
-        window.blit(highlight, collect_slot_2_xy)
-        window.blit(highlight, collect_slot_3_xy)
-
-        if not maze.get_a_collected():
-            window.blit(
-                item_a, (
-                    maze.get_a_xy_position()[0] * sqr_width,
-                    maze.get_a_xy_position()[1] * sqr_height + item_a_top_offset
-                )
+        window.blit(
+            macgyver_asset, (
+                macgyver.get_position()[0] * constants.SQUARE_WIDTH + 8,
+                macgyver.get_position()[1] * constants.SQUARE_HEIGHT
             )
-        else:
-            window.blit(item_a, (collect_slot_1_xy[0], collect_slot_1_xy[1] + item_a_top_offset))
+        )
 
-        if not maze.get_b_collected():
-            window.blit(
-                item_b, (
-                    maze.get_b_xy_position()[0] * sqr_width,
-                    maze.get_b_xy_position()[1] * sqr_height + item_b_top_offset
+        collect_slots_xy = []
+
+        for index in range(3):
+            collect_slots_xy.append((constants.SQUARE_WIDTH * constants.MAZE_WIDTH, index * constants.SQUARE_HEIGHT))
+
+        for xy in collect_slots_xy:
+            window.blit(highlight_asset, xy)
+
+        for index in range(len(objects)):
+            obj = objects[index]
+            asset = objects_asset_offset[index]
+
+            if not obj.is_collected():
+                window.blit(
+                    asset[0], (
+                        obj.get_position()[0] * constants.SQUARE_WIDTH,
+                        obj.get_position()[1] * constants.SQUARE_HEIGHT + asset[1]
+                    )
                 )
-            )
-        else:
-            window.blit(item_b, (collect_slot_2_xy[0], collect_slot_2_xy[1] + item_b_top_offset))
-
-        if not maze.get_c_collected():
-            window.blit(
-                item_c, (
-                    maze.get_c_xy_position()[0] * sqr_width,
-                    maze.get_c_xy_position()[1] * sqr_height + item_c_top_offset
+            else:
+                window.blit(
+                    asset[0],
+                    (
+                        collect_slots_xy[index][0],
+                        collect_slots_xy[index][1] + asset[1]
+                    )
                 )
-            )
-        else:
-            window.blit(item_c, (collect_slot_3_xy[0], collect_slot_3_xy[1] + item_c_top_offset))
 
-    # elif maze.get_game_over():
-    #     screen.clear()
-    #     screen.addstr(1, 1, 'Game over')
-    #
-    # elif maze.get_game_won():
-    #     screen.clear()
-    #     screen.addstr(1, 1, 'You win! Congrats!')
+    elif view_model.get_game_over():
+        pass
+
+    elif view_model.get_game_won():
+        pass
 
 
 if __name__ == '__main__':
