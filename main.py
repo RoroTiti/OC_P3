@@ -51,7 +51,7 @@ def main():
                 elif keys[pygame.K_RIGHT]:
                     view_model.move_mg(view_model.DIRECTION_RIGHT)
 
-                # Rendering the maze
+        # Rendering the maze
         render_maze(view_model)
         pygame.display.update()
 
