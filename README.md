@@ -4,7 +4,7 @@
 
 ## How to run the app ?
 
-- Moving to the right working directory
+- Move to the right working directory
 ```
 cd "C:/the/app/directory"
 ```
@@ -38,9 +38,9 @@ python .\main.py
 # Making a maze file
 You can build a maze file by respecting the following conditions:
 
-- A wall is materialized by ``#`` character
-- A path is materialized by `` `` character
-- The guardian is materialised by ``G`` character
+- A wall is materialized by ``#`` (dash) character
+- A path is materialized by `` `` (space) character
+- The guardian is materialised by ``G`` (capital G) character
 
 
 - The (0;1) block must be a path
