@@ -7,6 +7,7 @@ from models.maze import Maze
 from viewmodel import ViewModel
 
 window = None
+can_leave = False
 
 
 def main():
@@ -34,19 +35,23 @@ def main():
 
             keys = pygame.key.get_pressed()
 
-            if keys[pygame.K_UP]:
-                view_model.move_mg(view_model.DIRECTION_UP)
+            if can_leave:
+                if keys[pygame.K_RETURN] or keys[pygame.K_KP_ENTER]:
+                    quit()
+            else:
+                if keys[pygame.K_UP]:
+                    view_model.move_mg(view_model.DIRECTION_UP)
 
-            if keys[pygame.K_DOWN]:
-                view_model.move_mg(view_model.DIRECTION_DOWN)
+                if keys[pygame.K_DOWN]:
+                    view_model.move_mg(view_model.DIRECTION_DOWN)
 
-            elif keys[pygame.K_LEFT]:
-                view_model.move_mg(view_model.DIRECTION_LEFT)
+                elif keys[pygame.K_LEFT]:
+                    view_model.move_mg(view_model.DIRECTION_LEFT)
 
-            elif keys[pygame.K_RIGHT]:
-                view_model.move_mg(view_model.DIRECTION_RIGHT)
+                elif keys[pygame.K_RIGHT]:
+                    view_model.move_mg(view_model.DIRECTION_RIGHT)
 
-        # Rendering the maze
+                # Rendering the maze
         render_maze(view_model)
         pygame.display.update()
 
@@ -82,6 +87,8 @@ def render_maze(view_model: ViewModel):
     :param view_model: a ViewModel instance to work with
     :return:
     """
+    global can_leave
+
     # PyGame assets declarations
     macgyver_asset_offset = (pygame.image.load(r'assets/player_stand__.png'), 8)
     guardian_asset = pygame.image.load(r'assets/soldier_stand__.png')
@@ -157,19 +164,27 @@ def render_maze(view_model: ViewModel):
                     )
                 )
 
-    elif view_model.get_game_over():
+    elif view_model.get_game_over() or view_model.get_game_won():
         font = pygame.font.Font(constants.FONT_FILE, 128)
-        text = font.render('Game over...', True, (255, 255, 255))
-        text_rect = text.get_rect()
-        text_rect.center = (constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2)
-        window.blit(text, text_rect)
 
-    elif view_model.get_game_won():
-        font = pygame.font.Font(constants.FONT_FILE, 128)
-        text = font.render('You Win !!', True, (255, 255, 255))
+        white = (255, 255, 255)
+
+        if view_model.get_game_won():
+            text = font.render('You Win !!', True, white)
+        else:
+            text = font.render('Game over...', True, white)
+
         text_rect = text.get_rect()
         text_rect.center = (constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2)
+
+        sub_font = pygame.font.Font(constants.FONT_FILE, 30)
+        sub_text = sub_font.render('Press enter to quit...', True, (255, 255, 255))
+        sub_text_rect = sub_text.get_rect()
+        sub_text_rect.center = (constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2 + 150)
+
         window.blit(text, text_rect)
+        window.blit(sub_text, sub_text_rect)
+        can_leave = True
 
 
 if __name__ == '__main__':
