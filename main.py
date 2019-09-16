@@ -10,6 +10,10 @@ window = None
 
 
 def main():
+    """
+    Main app loop, containing PyGame logic
+    :return:
+    """
     global window
 
     screen = (1024, 960)
@@ -48,6 +52,11 @@ def main():
 
 
 def generate_maze():
+    """
+    Generation loop used if script is called with "gen" parameter
+    Creates a file containing a maze board
+    :return:
+    """
     maze = Maze(constants.MAZE_WIDTH, constants.MAZE_HEIGHT)
     maze.generate_board()
     board = maze.get_board()
@@ -68,6 +77,11 @@ def generate_maze():
 
 
 def render_maze(view_model: ViewModel):
+    """
+    Displays the maze board and all items on a PyGame window
+    :param view_model: a ViewModel instance to work with
+    :return:
+    """
     # PyGame assets declarations
     macgyver_asset = pygame.image.load(r'assets/player_stand__.png')
     guardian_asset = pygame.image.load(r'assets/soldier_stand__.png')
@@ -117,7 +131,7 @@ def render_maze(view_model: ViewModel):
             obj = objects[index]
             asset = objects_asset_offset[index]
 
-            if not obj.is_collected():
+            if not obj.collected():
                 window.blit(
                     asset[0], (
                         obj.get_position()[0] * constants.SQUARE_WIDTH,

@@ -13,6 +13,9 @@ class ViewModel:
     DIRECTION_LEFT = 4
 
     def __init__(self):
+        """
+        Creates a full maze board context
+        """
         self.__maze = Maze(constants.MAZE_WIDTH, constants.MAZE_HEIGHT)
         self.__macgyver = MacGyver((0, 1))
         self.__objects = []
@@ -39,7 +42,7 @@ class ViewModel:
         # Shuffle the array to mix the positions
         shuffle(free_blocks_xy_positions)
 
-        # Random zones
+        # Randomize zones
         zone_length = (len(free_blocks_xy_positions) - 1) // constants.OBJECTS
 
         # Choosing place of each object
@@ -49,10 +52,8 @@ class ViewModel:
 
     def move_mg(self, direction: int):
         """
-        Handle the movement of MacGyver on the board
-        Reset the __mg_xy_position property of the class with new position coordinated
-        :param direction:
-            Must be DIRECTION_UP or DIRECTION_RIGHT or DIRECTION_DOWN or DIRECTION_LEFT
+        Handles the movement of MacGyver on the board
+        :param direction: must be DIRECTION_UP or DIRECTION_RIGHT or DIRECTION_DOWN or DIRECTION_LEFT
         """
         board = self.__maze.get_board()
         macgyver = self.__macgyver
@@ -67,7 +68,7 @@ class ViewModel:
                 if board[macgyver.get_position()[1]][macgyver.get_position()[0] + 1] == 'G':
                     objects_collected = []
                     for obj in self.__objects:
-                        objects_collected.append(obj.is_collected())
+                        objects_collected.append(obj.collected())
                     self.__game_won = all(objects_collected)
                     self.__game_over = not any(objects_collected)
 
@@ -86,17 +87,37 @@ class ViewModel:
             if macgyver.get_position() == obj.get_position():
                 obj.collect()
 
-    def get_maze(self):
+    def get_maze(self) -> Maze:
+        """
+        Returns the maze object
+        :return: the maze object
+        """
         return self.__maze
 
-    def get_macgyver(self):
+    def get_macgyver(self) -> MacGyver:
+        """
+        Returns the MacGyver object
+        :return: the MacGyver object
+        """
         return self.__macgyver
 
-    def get_objects(self):
+    def get_objects(self) -> [Object]:
+        """
+        Returns the list of objects to collect
+        :return: the list of objects to collect
+        """
         return self.__objects
 
-    def get_game_over(self):
+    def get_game_over(self) -> bool:
+        """
+        Returns game over state
+        :return: true if game over, false otherwise
+        """
         return self.__game_over
 
-    def get_game_won(self):
+    def get_game_won(self) -> bool:
+        """
+        Return game won state
+        :return: true if game is won, false otherwise
+        """
         return self.__game_won

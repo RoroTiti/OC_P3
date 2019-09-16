@@ -3,6 +3,11 @@ from random import shuffle
 
 class Maze:
     def __init__(self, width: int, height: int):
+        """
+        Creates a maze board
+        :param width: width of maze board (including external walls)
+        :param height: height of maze board (including external walls)
+        """
         self.width: int = width
         self.height: int = height
         self.__board = [['' for _ in range(self.width)] for _ in range(self.height)]
@@ -12,7 +17,6 @@ class Maze:
         Generate a maze board
         Set the board property of the class
         """
-
         w: int = int((self.width - 1) / 2)
         h: int = int((self.height - 1) / 2)
 
@@ -60,6 +64,11 @@ class Maze:
         self.__board[self.height - 2][self.width - 1] = 'G'
 
     def load_string(self, file_lines: [str]):
+        """
+        Load a maze from a list of strings (list of maze lines)
+        :param file_lines: list of maze lines
+        :return:
+        """
         current_y = 1
 
         for line in file_lines:
@@ -67,4 +76,8 @@ class Maze:
             current_y += 1
 
     def get_board(self) -> [[str]]:
+        """
+        Returns the maze board array
+        :return: Returns the maze board array
+        """
         return self.__board
