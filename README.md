@@ -2,7 +2,7 @@
 
 ![Screenshots](https://i.imgur.com/MRtyN3A.png)
 
-## How to run the app ?
+## How to run the app ? (Windows guide)
 
 - Move to the right working directory
 ```
@@ -15,14 +15,14 @@ pip install virtualenv # if not already installed
 virtualenv venv
 ```
 
-- Enabling the virtual environment (Windows command)
+- Enabling the virtual environment
 ```
 .\venv\Scripts\activate
 ```
 
 - Installing the app dependencies
 ```
-pip install -r requirements.txt
+pip install -r .\requirements.txt
 ```
 
 - Generating a maze file (if not already present)
