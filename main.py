@@ -178,7 +178,7 @@ def render_maze(view_model: ViewModel):
         text_rect.center = (constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2)
 
         sub_font = pygame.font.Font(constants.FONT_FILE, 30)
-        sub_text = sub_font.render('Press enter to quit...', True, (255, 255, 255))
+        sub_text = sub_font.render('Press enter to exit...', True, (255, 255, 255))
         sub_text_rect = sub_text.get_rect()
         sub_text_rect.center = (constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2 + 150)
 
