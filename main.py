@@ -4,7 +4,7 @@ import pygame
 
 import constants
 from models.maze import Maze
-from viewmodels.maze import ViewModel
+from viewmodel import ViewModel
 
 window = None
 
@@ -144,7 +144,7 @@ def render_maze(view_model: ViewModel):
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == 'gen':
-        print('Generating Maze file...')
+        print('Generating maze.txt file...')
         generate_maze()
         print('Generation done!')
         exit()

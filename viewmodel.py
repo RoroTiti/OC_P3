@@ -19,18 +19,10 @@ class ViewModel:
         self.__game_won = False
         self.__game_over = False
 
-        # self.__maze.generate_board()
         file = open("maze.txt", "r")
         lines = file.readlines()
-
-        file_content = ''
-
-        for line in lines:
-            file_content += line
-
+        self.__maze.load_string(lines)
         file.close()
-
-        self.__maze.load_string(file_content)
 
         free_blocks_xy_positions: [(int, int)] = []
 

@@ -59,13 +59,10 @@ class Maze:
         # Placing the guardian
         self.__board[self.height - 2][self.width - 1] = 'G'
 
-    def load_string(self, file_content: str):
-        content = file_content.split('\n')
-        content = content[:-1]
-
+    def load_string(self, file_lines: [str]):
         current_y = 1
 
-        for line in content:
+        for line in file_lines:
             self.__board[current_y - 1] = list(line)
             current_y += 1
 
