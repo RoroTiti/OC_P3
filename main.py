@@ -16,12 +16,12 @@ def main():
     """
     global window
 
-    screen = (1024, 960)
+    screen = (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
     loop = True
 
     pygame.init()
     window = pygame.display.set_mode(screen)
-    pygame.display.set_caption("My Super Maze by @RoroTiti")
+    pygame.display.set_caption('My Super Maze by @RoroTiti')
 
     view_model = ViewModel()
 
@@ -71,7 +71,7 @@ def generate_maze():
 
     print(file_content)
 
-    file = open("maze.mz", "w+")
+    file = open('maze.mz', 'w+')
     file.write(file_content)
     file.close()
 
@@ -83,7 +83,7 @@ def render_maze(view_model: ViewModel):
     :return:
     """
     # PyGame assets declarations
-    macgyver_asset = pygame.image.load(r'assets/player_stand__.png')
+    macgyver_asset_offset = (pygame.image.load(r'assets/player_stand__.png'), 8)
     guardian_asset = pygame.image.load(r'assets/soldier_stand__.png')
     wall_asset = pygame.image.load(r'assets/wall.png')
     ground_asset = pygame.image.load(r'assets/ground.png')
@@ -98,7 +98,10 @@ def render_maze(view_model: ViewModel):
 
     board = view_model.get_maze().get_board()
     macgyver = view_model.get_macgyver()
+    guardian_position = view_model.get_maze().get_guardian_position()
     objects = view_model.get_objects()
+
+    window.fill((0, 0, 0))
 
     # Painting the background
     for x in range(constants.MAZE_WIDTH + 1):
@@ -113,9 +116,16 @@ def render_maze(view_model: ViewModel):
                     window.blit(wall_asset, (x * constants.SQUARE_WIDTH, y * constants.SQUARE_HEIGHT))
 
         window.blit(
-            macgyver_asset, (
-                macgyver.get_position()[0] * constants.SQUARE_WIDTH + 8,
+            macgyver_asset_offset[0], (
+                macgyver.get_position()[0] * constants.SQUARE_WIDTH + macgyver_asset_offset[1],
                 macgyver.get_position()[1] * constants.SQUARE_HEIGHT
+            )
+        )
+
+        window.blit(
+            guardian_asset, (
+                guardian_position[0] * constants.SQUARE_WIDTH + macgyver_asset_offset[1],
+                guardian_position[1] * constants.SQUARE_HEIGHT
             )
         )
 
@@ -148,10 +158,18 @@ def render_maze(view_model: ViewModel):
                 )
 
     elif view_model.get_game_over():
-        pass
+        font = pygame.font.Font(constants.FONT_FILE, 128)
+        text = font.render('Game over...', True, (255, 255, 255))
+        text_rect = text.get_rect()
+        text_rect.center = (constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2)
+        window.blit(text, text_rect)
 
     elif view_model.get_game_won():
-        pass
+        font = pygame.font.Font(constants.FONT_FILE, 128)
+        text = font.render('You Win !!', True, (255, 255, 255))
+        text_rect = text.get_rect()
+        text_rect.center = (constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2)
+        window.blit(text, text_rect)
 
 
 if __name__ == '__main__':

@@ -22,7 +22,7 @@ class ViewModel:
         self.__game_won = False
         self.__game_over = False
 
-        file = open("maze.mz", "r")
+        file = open('maze.mz', 'r')
         lines = file.readlines()
         self.__maze.load_string(lines)
         file.close()
@@ -70,7 +70,7 @@ class ViewModel:
                     for obj in self.__objects:
                         objects_collected.append(obj.collected())
                     self.__game_won = all(objects_collected)
-                    self.__game_over = not any(objects_collected)
+                    self.__game_over = not all(objects_collected)
 
                 elif board[macgyver.get_position()[1]][macgyver.get_position()[0] + 1] == ' ':
                     macgyver.move(macgyver.DIRECTION_RIGHT)

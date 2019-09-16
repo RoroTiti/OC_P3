@@ -10,6 +10,7 @@ class Maze:
         """
         self.width: int = width
         self.height: int = height
+        self.__guardian_xy_position = (14, 13)
         self.__board = [['' for _ in range(self.width)] for _ in range(self.height)]
 
     def generate_board(self):
@@ -21,8 +22,8 @@ class Maze:
         h: int = int((self.height - 1) / 2)
 
         visited = [[False] * w + [True] for _ in range(h)] + [[True] * (w + True)]
-        vertical = [["# "] * w + ['#'] for _ in range(h)] + [[]]
-        horizontal = [["##"] * w + ['#'] for _ in range(h + 1)]
+        vertical = [['# '] * w + ['#'] for _ in range(h)] + [[]]
+        horizontal = [['##'] * w + ['#'] for _ in range(h + 1)]
 
         def walk(board_x, board_y):
             visited[board_y][board_x] = True
@@ -40,9 +41,9 @@ class Maze:
                 if visited[direction_y][direction_x]:
                     continue
                 if direction_x == board_x:
-                    horizontal[max(board_y, direction_y)][board_x] = "# "
+                    horizontal[max(board_y, direction_y)][board_x] = '# '
                 if direction_y == board_y:
-                    vertical[board_y][max(board_x, direction_x)] = "  "
+                    vertical[board_y][max(board_x, direction_x)] = '  '
                 walk(direction_x, direction_y)
 
         walk(0, 0)
@@ -78,6 +79,13 @@ class Maze:
     def get_board(self) -> [[str]]:
         """
         Returns the maze board array
-        :return: Returns the maze board array
+        :return: the maze board array
         """
         return self.__board
+
+    def get_guardian_position(self) -> (int, int):
+        """
+        Returns the guardian XY position
+        :return: the guardian XY position
+        """
+        return self.__guardian_xy_position

@@ -17,7 +17,7 @@ class Object:
     def collected(self) -> bool:
         """
         Returns collected state
-        :return: boolean, True if collected, false otherwise
+        :return: true if collected, false otherwise
         """
         return self.__collected
 
