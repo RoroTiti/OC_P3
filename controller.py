@@ -17,7 +17,6 @@ class Controller:
         Creates a full maze board context
         """
         self.__maze = Maze(constants.MAZE_WIDTH, constants.MAZE_HEIGHT)
-        self.__macgyver = MacGyver((0, 1))
         self.__objects = []
         self.__game_won = False
         self.__game_over = False
@@ -26,6 +25,8 @@ class Controller:
         lines = file.readlines()
         self.__maze.load_string(lines)
         file.close()
+
+        self.__macgyver = MacGyver(self.__maze.get_entrance_position())
 
         free_blocks_xy_positions: [(int, int)] = []
 

@@ -77,7 +77,6 @@ class View:
 
         board = view_model.get_maze().get_board()
         macgyver = view_model.get_macgyver()
-        guardian_position = view_model.get_maze().get_guardian_position()
         objects = view_model.get_objects()
 
         self.window.fill((0, 0, 0))
@@ -92,19 +91,25 @@ class View:
             for x in range(constants.MAZE_WIDTH):
                 for y in range(constants.MAZE_HEIGHT):
                     if board[y][x] == '#':
-                        self.window.blit(wall_asset, (x * constants.SQUARE_WIDTH, y * constants.SQUARE_HEIGHT))
+                        self.window.blit(
+                            wall_asset, (
+                                x * constants.SQUARE_WIDTH,
+                                y * constants.SQUARE_HEIGHT
+                            )
+                        )
+
+                    elif board[y][x] == 'G':
+                        self.window.blit(
+                            guardian_asset, (
+                                x * constants.SQUARE_WIDTH + macgyver_asset_offset[1],
+                                y * constants.SQUARE_HEIGHT
+                            )
+                        )
 
             self.window.blit(
                 macgyver_asset_offset[0], (
                     macgyver.get_position()[0] * constants.SQUARE_WIDTH + macgyver_asset_offset[1],
                     macgyver.get_position()[1] * constants.SQUARE_HEIGHT
-                )
-            )
-
-            self.window.blit(
-                guardian_asset, (
-                    guardian_position[0] * constants.SQUARE_WIDTH + macgyver_asset_offset[1],
-                    guardian_position[1] * constants.SQUARE_HEIGHT
                 )
             )
 

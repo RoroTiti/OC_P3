@@ -1,4 +1,5 @@
 from random import shuffle
+import constants
 
 
 class Maze:
@@ -10,7 +11,8 @@ class Maze:
         """
         self.width: int = width
         self.height: int = height
-        self.__guardian_xy_position = (14, 13)
+        self.__guardian_xy_position: (int, int) = (0, 0)
+        self.__entrance_xy_position: (int, int) = (0, 0)
         self.__board = [['' for _ in range(self.width)] for _ in range(self.height)]
 
     def generate_board(self):
@@ -47,7 +49,7 @@ class Maze:
 
                 walk(direction_x, direction_y)
 
-        walk(0, 0)
+        walk(self.get_entrance_position()[0], self.get_entrance_position()[1])
 
         current_y = 1
 
@@ -60,7 +62,7 @@ class Maze:
                 current_y += 1
 
         # Making the maze entry and exit
-        self.__board[1][0] = ' '
+        self.__board[1][0] = 'E'
 
         # Placing the guardian
         self.__board[self.height - 2][self.width - 1] = 'G'
@@ -77,6 +79,13 @@ class Maze:
             self.__board[current_y - 1] = list(line)
             current_y += 1
 
+        for x in range(constants.MAZE_WIDTH):
+            for y in range(constants.MAZE_HEIGHT):
+                if self.__board[x][y] == 'E':
+                    self.__entrance_xy_position = (y, x)
+                elif self.__board[x][y] == 'G':
+                    self.__guardian_xy_position = (y, x)
+
     def get_board(self) -> [[str]]:
         """
         Returns the maze board array
@@ -84,9 +93,9 @@ class Maze:
         """
         return self.__board
 
-    def get_guardian_position(self) -> (int, int):
+    def get_entrance_position(self) -> (int, int):
         """
-        Returns the guardian XY position
-        :return: the guardian XY position
+        Returns the entrance XY position
+        :return: the entrance XY position
         """
-        return self.__guardian_xy_position
+        return self.__entrance_xy_position
