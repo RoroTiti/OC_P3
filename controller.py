@@ -59,34 +59,54 @@ class Controller:
         board = self.__maze.get_board()
         macgyver = self.__macgyver
 
+        check_final_state = False
+
         if direction == self.DIRECTION_UP:
-            if board[macgyver.get_position()[1] - 1][macgyver.get_position()[0]] == ' ':
-                macgyver.move(macgyver.DIRECTION_UP)
+            if macgyver.get_position()[1] > 0:
+                content = board[macgyver.get_position()[1] - 1][macgyver.get_position()[0]]
+
+                if content == ' ':
+                    macgyver.move(macgyver.DIRECTION_UP)
+                elif content == 'G':
+                    check_final_state = True
 
         elif direction == self.DIRECTION_RIGHT:
-            # This line prevents out of range exception at maze exit
             if macgyver.get_position()[0] < constants.MAZE_WIDTH - 1:
-                if board[macgyver.get_position()[1]][macgyver.get_position()[0] + 1] == 'G':
-                    objects_collected = []
-                    for obj in self.__objects:
-                        objects_collected.append(obj.collected())
-                    self.__game_won = all(objects_collected)
-                    self.__game_over = not all(objects_collected)
+                content = board[macgyver.get_position()[1]][macgyver.get_position()[0] + 1]
 
-                elif board[macgyver.get_position()[1]][macgyver.get_position()[0] + 1] == ' ':
+                if content == ' ':
                     macgyver.move(macgyver.DIRECTION_RIGHT)
+                elif content == 'G':
+                    check_final_state = True
 
         elif direction == self.DIRECTION_DOWN:
-            if board[macgyver.get_position()[1] + 1][macgyver.get_position()[0]] == ' ':
-                macgyver.move(macgyver.DIRECTION_DOWN)
+            if macgyver.get_position()[1] < constants.MAZE_HEIGHT - 1:
+                content = board[macgyver.get_position()[1] + 1][macgyver.get_position()[0]]
+
+                if content == ' ':
+                    macgyver.move(macgyver.DIRECTION_DOWN)
+                elif content == 'G':
+                    check_final_state = True
 
         elif direction == self.DIRECTION_LEFT:
-            if board[macgyver.get_position()[1]][macgyver.get_position()[0] - 1] == ' ':
-                macgyver.move(macgyver.DIRECTION_LEFT)
+            if macgyver.get_position()[0] > 0:
+                content = board[macgyver.get_position()[1]][macgyver.get_position()[0] - 1]
+
+                if content == ' ':
+                    macgyver.move(macgyver.DIRECTION_LEFT)
+                if content == 'G':
+                    check_final_state = True
 
         for obj in self.__objects:
             if macgyver.get_position() == obj.get_position():
                 obj.collect()
+
+        if check_final_state:
+            objects_collected = []
+            for obj in self.__objects:
+                objects_collected.append(obj.collected())
+            self.__game_won = all(objects_collected)
+            self.__game_over = not all(objects_collected)
 
     def get_maze(self) -> Maze:
         """
