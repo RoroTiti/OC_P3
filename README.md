@@ -1,6 +1,6 @@
 # My Super Maze by @RoroTiti
 
-![Screenshots](https://i.imgur.com/MRtyN3A.png)
+![Screenshots](https://i.imgur.com/ijYFIlw.png)
 
 ## How to run the app ? (Windows guide)
 
