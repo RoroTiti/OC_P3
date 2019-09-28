@@ -3,10 +3,10 @@ from random import shuffle, randint
 import constants
 from models.macgyver import MacGyver
 from models.maze import Maze
-from models.object import Object
+from models.item import Item
 
 
-class ViewModel:
+class Controller:
     DIRECTION_UP = 1
     DIRECTION_RIGHT = 2
     DIRECTION_DOWN = 3
@@ -39,7 +39,7 @@ class ViewModel:
         free_blocks_xy_positions.pop(0)
         free_blocks_xy_positions.pop(len(free_blocks_xy_positions) - 1)
 
-        # Shuffle the array to mix the positions
+        # Shuffling the array to mix the positions
         shuffle(free_blocks_xy_positions)
 
         # Randomize zones
@@ -48,7 +48,7 @@ class ViewModel:
         # Choosing place of each object
         for index in range(constants.OBJECTS):
             element_index = randint(index * zone_length, (index + 1) * zone_length)
-            self.__objects.append(Object(free_blocks_xy_positions[element_index]))
+            self.__objects.append(Item(free_blocks_xy_positions[element_index]))
 
     def move_mg(self, direction: int):
         """
@@ -101,7 +101,7 @@ class ViewModel:
         """
         return self.__macgyver
 
-    def get_objects(self) -> [Object]:
+    def get_objects(self) -> [Item]:
         """
         Returns the list of objects to collect
         :return: the list of objects to collect

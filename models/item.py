@@ -1,4 +1,4 @@
-class Object:
+class Item:
     def __init__(self, xy_position: tuple):
         """
         Created a new object that MacGyver must collect on maze board

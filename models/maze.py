@@ -44,6 +44,7 @@ class Maze:
                     horizontal[max(board_y, direction_y)][board_x] = '# '
                 if direction_y == board_y:
                     vertical[board_y][max(board_x, direction_x)] = '  '
+
                 walk(direction_x, direction_y)
 
         walk(0, 0)
