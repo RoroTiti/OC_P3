@@ -52,4 +52,4 @@ If you want some originality, you can even place the guardian on the maze circui
 # Working environment
 - Windows 10
 - Python 3.7.4
-- PyGame 1.9.6
+- PyGame 2.0.0.dev3
