@@ -44,7 +44,7 @@ You can build a maze file by respecting the following conditions:
 - The guardian is materialised by ``G`` (capital G) character
 
 
-- Thanks to the flexible maze recognition performed on the game, you can place the maze entrance and the guardian on any place you want and on any side of the maze bounds.
+- Thanks to the flexible maze recognition performed into the game, you can place the maze entrance and the guardian on any place you want and on any side of the maze bounds.
 If you want some originality, you can even place the guardian on the maze circuit and not at the exit.
 
 - **Not any check is made in order to validate the mz file. You must ensure by yourself that your file is valid.**
