@@ -36,10 +36,6 @@ class Controller:
                 if self.__maze.get_board()[y][x] == ' ':
                     free_blocks_xy_positions.append((x, y))
 
-        # Popping first and last list item (MacGyver and Guardian positions respectively)
-        free_blocks_xy_positions.pop(0)
-        free_blocks_xy_positions.pop(len(free_blocks_xy_positions) - 1)
-
         # Shuffling the array to mix the positions
         shuffle(free_blocks_xy_positions)
 
