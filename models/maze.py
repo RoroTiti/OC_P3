@@ -1,37 +1,31 @@
-from random import shuffle, randint
-from typing import List
+from random import shuffle
+import constants
 
 
 class Maze:
-    DIRECTION_UP = 1
-    DIRECTION_RIGHT = 2
-    DIRECTION_DOWN = 3
-    DIRECTION_LEFT = 4
-
     def __init__(self, width: int, height: int):
+        """
+        Creates a maze board
+        :param width: width of maze board (including external walls)
+        :param height: height of maze board (including external walls)
+        """
         self.width: int = width
         self.height: int = height
-        self.board = [['' for _ in range(self.width)] for _ in range(self.height)]
-        self.__mg_xy_position = (0, 1)
-        self.__a_xy_position = (0, 0)
-        self.__a_collected = False
-        self.__b_xy_position = (0, 0)
-        self.__b_collected = False
-        self.__game_won = False
-        self.__game_over = False
+        self.__guardian_xy_position: (int, int) = (0, 0)
+        self.__entrance_xy_position: (int, int) = (0, 0)
+        self.__board = [['' for _ in range(self.width)] for _ in range(self.height)]
 
     def generate_board(self):
         """
         Generate a maze board
         Set the board property of the class
         """
-
         w: int = int((self.width - 1) / 2)
         h: int = int((self.height - 1) / 2)
 
         visited = [[False] * w + [True] for _ in range(h)] + [[True] * (w + True)]
-        vertical = [["# "] * w + ['#'] for _ in range(h)] + [[]]
-        horizontal = [["##"] * w + ['#'] for _ in range(h + 1)]
+        vertical = [['# '] * w + ['#'] for _ in range(h)] + [[]]
+        horizontal = [['##'] * w + ['#'] for _ in range(h + 1)]
 
         def walk(board_x, board_y):
             visited[board_y][board_x] = True
@@ -44,150 +38,64 @@ class Maze:
             ]
 
             shuffle(directions)
+
             for (direction_x, direction_y) in directions:
                 if visited[direction_y][direction_x]:
                     continue
                 if direction_x == board_x:
-                    horizontal[max(board_y, direction_y)][board_x] = "# "
+                    horizontal[max(board_y, direction_y)][board_x] = '# '
                 if direction_y == board_y:
-                    vertical[board_y][max(board_x, direction_x)] = "  "
+                    vertical[board_y][max(board_x, direction_x)] = '  '
+
                 walk(direction_x, direction_y)
 
-        walk(0, 0)
+        walk(self.get_entrance_position()[0], self.get_entrance_position()[1])
 
-        curr_y = 1
+        current_y = 1
 
         for (a, b) in zip(horizontal, vertical):
             if a:
-                self.board[curr_y - 1] = list(''.join(a))
-                curr_y += 1
+                self.__board[current_y - 1] = list(''.join(a))
+                current_y += 1
             if b:
-                self.board[curr_y - 1] = list(''.join(b))
-                curr_y += 1
+                self.__board[current_y - 1] = list(''.join(b))
+                current_y += 1
 
         # Making the maze entry and exit
-        self.board[1][0] = ' '
+        self.__board[1][0] = 'E'
 
         # Placing the guardian
-        self.board[self.height - 2][self.width - 1] = 'G'
+        self.__board[self.height - 2][self.width - 1] = 'G'
 
-    def place_items(self):
+    def load_string(self, file_lines: [str]):
         """
-        Generate the coordinated of items to collect in order to win the game
-        Set the __a_xy_position and __b_xy_position properties of the class
-        """
-
-        # Step 0 : init
-        free_blocks_xy_positions: List[(int, int)] = []
-
-        # Step 1 : getting all empty blocks of board
-        for y in range(len(self.board)):
-            for x in range(len(self.board[y])):
-                if self.board[y][x] == ' ':
-                    free_blocks_xy_positions.append((x, y))
-
-        # Shuffle the array to mix the positions
-        shuffle(free_blocks_xy_positions)
-
-        # Step 2 : choosing place of element A
-        element_a_index = randint(0, len(free_blocks_xy_positions) // 2)
-        self.__a_xy_position = free_blocks_xy_positions[element_a_index]
-
-        # Step 3 : choosing place of element B
-        element_b_index = randint(len(free_blocks_xy_positions) // 2, len(free_blocks_xy_positions) - 1)
-        self.__b_xy_position = free_blocks_xy_positions[element_b_index]
-
-    def move_mg(self, direction: int):
-        """
-        Handle the movement of MacGyver on the board
-        Reset the __mg_xy_position property of the class with new position coordinated
-        :param direction:
-            Must be DIRECTION_UP or DIRECTION_RIGHT or DIRECTION_DOWN or DIRECTION_LEFT
-        """
-        if direction == self.DIRECTION_UP:
-            if self.board[self.__mg_xy_position[1] - 1][self.__mg_xy_position[0]] == ' ':
-                self.__mg_xy_position = (self.__mg_xy_position[0], self.__mg_xy_position[1] - 1)
-
-        elif direction == self.DIRECTION_RIGHT:
-            # This line prevents out of range exception at maze exit
-            if self.__mg_xy_position[0] < len(self.board[0]) - 1:
-                if self.board[self.__mg_xy_position[1]][self.__mg_xy_position[0] + 1] == 'G':
-                    if self.get_a_collected() and self.get_b_collected():
-                        self.__game_won = True
-                    else:
-                        self.__game_over = True
-
-                elif self.board[self.__mg_xy_position[1]][self.__mg_xy_position[0] + 1] == ' ':
-                    self.__mg_xy_position = (self.__mg_xy_position[0] + 1, self.__mg_xy_position[1])
-
-        elif direction == self.DIRECTION_DOWN:
-            if self.board[self.__mg_xy_position[1] + 1][self.__mg_xy_position[0]] == ' ':
-                self.__mg_xy_position = (self.__mg_xy_position[0], self.__mg_xy_position[1] + 1)
-
-        elif direction == self.DIRECTION_LEFT:
-            if self.board[self.__mg_xy_position[1]][self.__mg_xy_position[0] - 1] == ' ':
-                self.__mg_xy_position = (self.__mg_xy_position[0] - 1, self.__mg_xy_position[1])
-
-        if self.__mg_xy_position == self.__a_xy_position:
-            self.__a_collected = True
-
-        if self.__mg_xy_position == self.__b_xy_position:
-            self.__b_collected = True
-
-    def get_mg_xy_position(self) -> (int, int):
-        """
-        Getter for MacGyver position property
+        Load a maze from a list of strings (list of maze lines)
+        :param file_lines: list of maze lines
         :return:
-            A tuple (int, int) with X and Y position
         """
-        return self.__mg_xy_position
+        current_y = 1
 
-    def get_a_xy_position(self) -> (int, int):
-        """
-        Getter for item A to collect position property
-        :return:
-            A tuple (int, int) with X and Y position
-        """
-        return self.__a_xy_position
+        for line in file_lines:
+            self.__board[current_y - 1] = list(line)
+            current_y += 1
 
-    def get_a_collected(self) -> bool:
-        """
-        Getter for item A collected or not property
-        :return:
-            A boolean, True if item A is collected, False otherwise
-        """
-        return self.__a_collected
+        for x in range(constants.MAZE_WIDTH):
+            for y in range(constants.MAZE_HEIGHT):
+                if self.__board[x][y] == 'E':
+                    self.__entrance_xy_position = (y, x)
+                elif self.__board[x][y] == 'G':
+                    self.__guardian_xy_position = (y, x)
 
-    def get_b_xy_position(self) -> (int, int):
+    def get_board(self) -> [[str]]:
         """
-        Getter for item B to collect position property
-        :return:
-            A tuple (int, int) with X and Y position
+        Returns the maze board array
+        :return: the maze board array
         """
-        return self.__b_xy_position
+        return self.__board
 
-    def get_b_collected(self) -> bool:
+    def get_entrance_position(self) -> (int, int):
         """
-        Getter for item B collected or not property
-        :return:
-            A boolean, True if item B is collected, False otherwise
+        Returns the entrance XY position
+        :return: the entrance XY position
         """
-        return self.__b_collected
-
-    def get_game_won(self) -> bool:
-        """
-        Getter for game won property
-        Reminder: a game is won if item A and item B are collected and user reached the end of the maze
-        :return:
-            A boolean, True if game has been won, False otherwise
-        """
-        return self.__game_won
-
-    def get_game_over(self) -> bool:
-        """
-        Getter for game over property
-        Reminder: a game is over if item A or item B are not collected but user reached the end of the maze
-        :return:
-            A boolean, True if game is over, False otherwise
-        """
-        return self.__game_over
+        return self.__entrance_xy_position
